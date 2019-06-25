@@ -51,66 +51,66 @@ export class Movie extends Component {
                 year.push(yearSpread[i]);
             }
 
-            // console.log(this.state.movieCreditResult[0]);
 
             //transformation du vote en %
             let votePourcent = vote_average * 10;
 
             const { loading } = this.props;
         return (
-            <div className="bg-dark movieHeadline">
-                <div className='container grid-2'>
-                    <img src={"https://image.tmdb.org/t/p/w185" + poster_path} alt={title} />
-                    <div className="content">
-                        <h1>{title}<span className="date">({year})</span></h1>
-                        <ul className="toolBox">
-                            <li className="rating">
-                                <div className="voteOuterCircle">
-                                    <div className="voteInnerCircle">
-                                        {votePourcent}%
+            <div className="moviePAgeContent">
+                <div className="bg-dark movieHeadline">
+                    <div className='container grid-2'>
+                        <img src={"https://image.tmdb.org/t/p/w185" + poster_path} alt={title} />
+                        <div className="content">
+                            <h1>{title}<span className="date">({year})</span></h1>
+                            <ul className="toolBox">
+                                <li className="rating">
+                                    <div className="voteOuterCircle">
+                                        <div className="voteInnerCircle">
+                                            {votePourcent}%
+                                        </div>
                                     </div>
-                                </div>
-                                <p>Note des utilisateurs</p>
-                            </li>
-                            <li className="toolBox-icon">
-                                <p className="tollBox-linkItem"><i className="fas fa-list"></i></p>
-                            </li>
-                            <li className="toolBox-icon">
-                                <p className="tollBox-linkItem"><i className="fas fa-heart"></i></p>
-                            </li>
-                            <li className="toolBox-link">
-                                <p className="tollBox-linkItem"><i className="fas fa-play"></i> Regarder le trailer</p>
-                            </li>
-                        </ul>
-                        <div className="synopsis">
-                            <h2>Synopsis</h2>
-                            <p>{overview}</p>
-                        </div>
-                        <div className="technical">
-                            <h2>Equipe technique en vedette</h2>
-                            <ul className="technicalStaff">
-                                {this.state.movieCreditResult[0] ? <MovieCreditItem key={this.state.movieCreditResult[0].id} movieCreditResult={this.state.movieCreditResult[0]} /> : null}
-                                {this.state.movieCreditResult[1] ? <MovieCreditItem key={this.state.movieCreditResult[1].id} movieCreditResult={this.state.movieCreditResult[1]} /> : null}
-                                {this.state.movieCreditResult[2] ? <MovieCreditItem key={this.state.movieCreditResult[2].id} movieCreditResult={this.state.movieCreditResult[2]} /> : null}
+                                    <p>Note des utilisateurs</p>
+                                </li>
+                                <li className="toolBox-icon">
+                                    <p className="tollBox-linkItem"><i className="fas fa-list"></i></p>
+                                </li>
+                                <li className="toolBox-icon">
+                                    <p className="tollBox-linkItem"><i className="fas fa-heart"></i></p>
+                                </li>
+                                <li className="toolBox-link">
+                                    <p className="tollBox-linkItem"><i className="fas fa-play"></i> Regarder le trailer</p>
+                                </li>
                             </ul>
+                            <div className="synopsis">
+                                <h2>Synopsis</h2>
+                                <p>{overview}</p>
+                            </div>
+                            <div className="technical">
+                                <h2>Equipe technique en vedette</h2>
+                                <ul className="technicalStaff">
+                                    {this.state.movieCreditResult[0] ? <MovieCreditItem key={this.state.movieCreditResult[0].id} movieCreditResult={this.state.movieCreditResult[0]} /> : null}
+                                    {this.state.movieCreditResult[1] ? <MovieCreditItem key={this.state.movieCreditResult[1].id} movieCreditResult={this.state.movieCreditResult[1]} /> : null}
+                                    {this.state.movieCreditResult[2] ? <MovieCreditItem key={this.state.movieCreditResult[2].id} movieCreditResult={this.state.movieCreditResult[2]} /> : null}
+                                </ul>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div className="container mainContent">
+                    <div className="teteAffiche">
+                        <h2>Tête d'affiche</h2>
+                    </div>
+                    <aside className="aside">
+                        <ul>
+                            <li><h3>Status</h3><p>{status === "Released" ? "Sorti" : "A venir"}</p></li>
+                        </ul>
+                    </aside>
                 </div>
             </div>
         )
     }
 }
-
-
-// !
-// !
-// !
-// !
-// ! La solution à mon problème devrait se trouver dans l'architecture App.js display des films en vedette
-// !
-// ! je vais devoir créer un composant qui prendra en charge un item et ensuite l'introduire dans le component
-// ! Movie.js de la même manière que je l'ai fait que pour MovieItem !!!!
-// !
             
 
 
