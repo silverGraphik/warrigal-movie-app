@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 const About = () => {
     return (
-        <Fragment className="all-center">
+        <div className="container">
             <h1>A propos de cet application</h1>
             <p>Une application pour effectuer une recherche de film à l'aide d'une API, de permettre à l'utilisateur de se créer un compte
                 utilisateur, de se connecter, de mettre à jour et supprimer son profil, l'utilisateur pourra également enregistrer un film 
@@ -29,7 +29,7 @@ const About = () => {
                 </li>
             </ol>
             <p>Version: 1.0.0</p>
-        </Fragment>
+        </div>
     )
 }
 
