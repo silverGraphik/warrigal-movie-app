@@ -7,7 +7,7 @@ const MovieItem = ({movie: {poster_path, title, overview, id}}) => {
 
     return (
         <div className="card text-center">
-            <img src={"https://image.tmdb.org/t/p/w185" + poster_path} alt={title} style={{width: '150px'}} />
+            <img src={"https://image.tmdb.org/t/p/original" + poster_path} alt={title} style={{width: '150px'}} />
             <h3>{title}</h3>
             <p>{overview}</p>
             <Link to={`/movie/${id}`} className="btn btn-dark">Voire le film</Link>

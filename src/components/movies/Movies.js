@@ -1,5 +1,5 @@
 import React from 'react'
-import MovieItem from './MovieItem';
+import MovieItem from './items/MovieItem';
 import Spinner from '../layout/Spinner';
 import PropTypes from 'prop-types';
 

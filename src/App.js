@@ -7,6 +7,8 @@ import Movie from './components/movies/Movie';
 import Search from './components/movies/Search';
 import Alert from './components/layout/Alert';
 import About from './components/pages/About';
+import Genre from './components/movies/genre/Genre';
+import Collection from './components/movies/collection/Collection';
 import axios from 'axios';
 
 
@@ -25,6 +27,7 @@ class App extends Component {
     this.setState({loading: true});
     const res = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`); 
     this.setState({movies: res.data.results, loading: false});
+
   }
 
   // Résultat de la recherche 
@@ -44,7 +47,6 @@ class App extends Component {
   
     this.setState({movie: res.data, loading: false});
   };
-
   //Retour au film à découvrir
   clearMovies = async () => {
     this.setState({loading: true});
@@ -84,6 +86,12 @@ class App extends Component {
               <Route exact path='/about' component={About} />
               <Route exact path='/movie/:movieId' render={props => (
                 <Movie { ...props } getMovie={this.getMovie} movie={movie} loading={loading} />
+              )} />
+              <Route exact path='/movie/genre/:genreId' render={props => (
+                <Genre { ...props } />
+              )} />
+              <Route exact path='/movie/collection/:collectionId' render={props => (
+                <Collection { ...props } />
               )} />
             </Switch>
           </div>

@@ -3,23 +3,46 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MovieCreditItem from './items/MovieCreditItem';
 import MovieCastItem from './items/MovieCastItem';
+import RecommendationsItem from './items/RecommendationsItem';
 
 export class Movie extends Component {
     state = {
         movieCreditCrew: {},
         movieCreditCast: {},
+        recommendationsList: []
     }
 
 
     async componentDidMount() {
         this.props.getMovie(this.props.match.params.movieId);
-        // this.props.getMovieCredit(this.props.match.params.movieId);
 
         const movieId = this.props.match.params.movieId
         const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
-        this.setState({movieCreditCrew: res.data.crew, movieCreditCast: res.data.cast});
+        const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`)
+        this.setState({
+            movieCreditCrew: res.data.crew, 
+            movieCreditCast: res.data.cast,
+            recommendationsList: recom.data.results
+        });
         
-        // console.log(this.props.movie);
+        // console.log(this.state.recommendationsList);
+    }
+
+    async componentDidUpdate(prevProps) {
+        if(this.props.match.params.movieId !== prevProps.match.params.movieId) {
+            this.props.getMovie(this.props.match.params.movieId)
+
+            const movieId = this.props.match.params.movieId
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+            const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`)
+            this.setState({
+                movieCreditCrew: res.data.crew,
+                movieCreditCast: res.data.cast,
+                recommendationsList: recom.data.results
+            })
+        } else {
+            return null
+        }
     }
 
     render() {
@@ -31,7 +54,6 @@ export class Movie extends Component {
             overview,
             popularity,
             poster_path,
-            backdrop_path,
             production_companies,
             production_countries,
             release_date,
@@ -43,6 +65,8 @@ export class Movie extends Component {
             vote_average,
             vote_count,
             belongs_to_collection } = this.props.movie;
+
+        const {recommendationsList} = this.state;
 
         // utilisation du spread  opreator pour pouvoir sortir la date de son objet et récupérer 
         // toute les information nécessaire en information utile et pertinente
@@ -108,17 +132,33 @@ export class Movie extends Component {
         // Math.round sur la popularité pour obtenir un chiffre rond
         let populaire = Math.floor(popularity);
 
-        console.log(belongs_to_collection);
+        // console.log(belongs_to_collection);
 
         //transformation du vote en %
         let votePourcent = vote_average * 10;
 
-        const { loading } = this.props;
+        // Limitation du nombre d'élément recommander montrer à l'utilisateur
+
+        let recommendationsArr = [];
+
+       
+
+        if(recommendationsList.length <= 0) {
+            return null;
+        } else {
+            for(let i = 0; i < 4; i++) {
+                recommendationsArr.push(<RecommendationsItem key={i} recommendationList={recommendationsList[i]} />);
+            }
+        }
+
+        // console.log(genres);
+
+        // const { loading } = this.props;
         return (
             <div className="moviePAgeContent">
                 <div className="bg-dark movieHeadline">
                     <div className='container grid-2'>
-                        <img src={"https://image.tmdb.org/t/p/w185" + poster_path} alt={title} />
+                        <img src={"https://image.tmdb.org/t/p/original" + poster_path} alt={title} />
                         <div className="content">
                             <h1>{title}<span className="date">({year})</span></h1>
                             <ul className="toolBox">
@@ -161,11 +201,17 @@ export class Movie extends Component {
                                 {castRows}
                             </ul>
                         </div>
-                        {belongs_to_collection && <div className="collection" style={{backgroundImage: `url(https://image.tmdb.org/t/p/w185${belongs_to_collection.poster_path})`}}>
+                        {belongs_to_collection && <div className="collection" style={{backgroundImage: `url(https://image.tmdb.org/t/p/original${belongs_to_collection.poster_path})`}}>
                             <div className="overlay"></div>
                             <h2>{belongs_to_collection.name}</h2>
-                            <Link to={`/collection/${belongs_to_collection.id}`} className="collectionButton">Voire la collection</Link>
+                            <Link to={`collection/${belongs_to_collection.id}`} className="collectionButton">Voire la collection</Link>
                         </div>}
+                        <div className="recomm">
+                            <h2>Recommendations</h2>
+                            <ul className="recommendation-container">
+                                {recommendationsArr}
+                            </ul>
+                        </div>
                     </div>
                     <aside className="aside">
                         <h3>Informations</h3>
@@ -179,16 +225,16 @@ export class Movie extends Component {
                             <p>{status === "Released" ? `Sorti le ${dateOfRelease} au cinéma.` : `A paraitre le ${dateOfRelease}`}</p>
                         </div>
                         <div className="aside-item OriginalLanguage"><h3>Langue originale</h3>{original_language}</div>
-                         <div className="aside-item spokenLanguage">
+                        <div className="aside-item spokenLanguage">
                             <h3>Langue(s) parlé(s)</h3>
-                             <ul className="spokenLang">
+                            <ul className="spokenLang">
                                 { spoken_languages ? spoken_languages.map(spoken_language => (<li key={spoken_language.iso_639_1}>- {spoken_language.name}</li>)) : null }
                             </ul>
                         </div>
                         <div className="aside-item duration"><h3>Durée</h3><p>{runtime === 0 ? `-` : `${movieDuration}`}</p></div>
                         <div className="aside-item productionCountries">
                             <h3>Pays de production(s)</h3>
-                             <ul className="productionCountry">
+                            <ul className="productionCountry">
                                 { production_countries ? production_countries.map(production_country => (<li key={production_country.iso_3166_1}>- {production_country.name}</li>)) : null }
                             </ul>
                         </div>
@@ -197,7 +243,7 @@ export class Movie extends Component {
                         <ul className=" aside-item genres">
                             <h3>Genres</h3>
                             <div className="li-item">
-                                { genres ? genres.map(genre => (<li key={genre.id}>{genre.name}</li>)) : null }
+                                { genres ? genres.map(genre => (<Link to={`genre/${genre.id}`} key={genre.id}>{genre.name}</Link>)) : null }
                             </div>
                         </ul>
                         <div className="aside-item popularity">
