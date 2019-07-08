@@ -7,6 +7,7 @@
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
   --success-color: #28a745;
+  --login-color: #f9ca24;
 }
 
 * {
@@ -388,6 +389,19 @@ table th {
 }
 
 /* CUSTOM CSS */
+
+nav ul {
+  align-content: center;
+  align-items: center;
+}
+
+nav ul .login {
+  border-radius: 10px;
+  padding: 5px 15px;
+  background-color: var(--login-color);
+  color: var(--dark-color);
+  transition: 0.5s;
+}
 
 .navbrand {
   display: grid;

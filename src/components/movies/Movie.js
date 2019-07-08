@@ -1,51 +1,40 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MovieCreditItem from './items/MovieCreditItem';
 import MovieCastItem from './items/MovieCastItem';
 import RecommendationsItem from './items/RecommendationsItem';
 
-export class Movie extends Component {
-    state = {
-        movieCreditCrew: {},
-        movieCreditCast: {},
-        recommendationsList: []
-    }
+const Movie = ({ getMovie, match, movie }) => {
+    const [movieCreditCrew, setMovieCreditCrew] = useState({});
+    const [movieCreditCast, setMovieCreditCast] = useState({});
+    const [recommendationsList, setRecommendationsList] = useState([]);
+
+    const movieId = match.params.movieId;
 
 
-    async componentDidMount() {
-        this.props.getMovie(this.props.match.params.movieId);
+    // Récupération à l'aide d'une requête API des crédits et des recommendation de films + rester à l'écoute des changement dans l'url
+    useEffect(() => {
+        getMovie(match.params.movieId);
 
-        const movieId = this.props.match.params.movieId
-        const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
-        const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`)
-        this.setState({
-            movieCreditCrew: res.data.crew, 
-            movieCreditCast: res.data.cast,
-            recommendationsList: recom.data.results
-        });
-        
-        // console.log(this.state.recommendationsList);
-    }
-
-    async componentDidUpdate(prevProps) {
-        if(this.props.match.params.movieId !== prevProps.match.params.movieId) {
-            this.props.getMovie(this.props.match.params.movieId)
-
-            const movieId = this.props.match.params.movieId
+        const fetchCredit = async () => {
             const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
-            const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`)
-            this.setState({
-                movieCreditCrew: res.data.crew,
-                movieCreditCast: res.data.cast,
-                recommendationsList: recom.data.results
-            })
-        } else {
-            return null
-        }
-    }
+            setMovieCreditCast(res.data.cast);
+            setMovieCreditCrew(res.data.crew);
+        };
 
-    render() {
+        const fetchRecommendationList = async () => {
+            const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+            setRecommendationsList(recom.data.results);
+        };
+
+        fetchCredit();
+        fetchRecommendationList();
+
+        // console.log(movieId);
+        // eslint-disable-next-line
+    }, [movieId]); // permet de rester à l'écoute de changement du movieId
+
         const { 
             budget,
             genres,
@@ -64,9 +53,7 @@ export class Movie extends Component {
             title,
             vote_average,
             vote_count,
-            belongs_to_collection } = this.props.movie;
-
-        const {recommendationsList} = this.state;
+            belongs_to_collection } = movie;
 
         // utilisation du spread  opreator pour pouvoir sortir la date de son objet et récupérer 
         // toute les information nécessaire en information utile et pertinente
@@ -85,17 +72,17 @@ export class Movie extends Component {
 
         // boucle pour récupérer les 3 premiers éléments du tableau des crédits du film
         let crewRows = [];
-        if (this.state.movieCreditCrew.length > 0) {
+        if (movieCreditCrew.length > 0) {
             for (let i = 0; i < 3; i++) {
-                crewRows.push(<MovieCreditItem key={i} movieCreditCrew={this.state.movieCreditCrew[i]} />);
+                crewRows.push(<MovieCreditItem key={i} movieCreditCrew={movieCreditCrew[i]} />);
             }
         } 
 
         // boucle pour récupérer les 5 premiers Acteurs du film
         let castRows = [];
-        if (this.state.movieCreditCast.length > 0) {
+        if (movieCreditCast.length > 0) {
             for (let i = 0; i < 5; i++) {
-                castRows.push(<MovieCastItem key={i} movieCreditCast={this.state.movieCreditCast[i]} />);
+                castRows.push(<MovieCastItem key={i} movieCreditCast={movieCreditCast[i]} />);
             }
         }
 
@@ -254,7 +241,6 @@ export class Movie extends Component {
                 </div>
             </div>
         )
-    }
 }
             
 

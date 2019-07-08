@@ -17,6 +17,9 @@ const Navbar = ({ img_url, title }) => {
                 <li>
                     <Link to='/about'>A Propos</Link>
                 </li>
+                <li>
+                    <Link to='/login' className="btn login">Se connecter</Link>
+                </li>
             </ul>
         </nav>
     )

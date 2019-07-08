@@ -1,48 +1,43 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 
-export class Search extends Component {
-    state = {
-        text: ''
-    }
+const Search = ({ searchQuerySend, clearMovies, setAlert, searchMovies}) => {
+    const [text, setText] = useState('');
 
-    static propTypes = {
-        searchMovies: PropTypes.func.isRequired,
-        clearMovies: PropTypes.func.isRequired,
-        searchQuerySend: PropTypes.bool.isRequired,
-        setAlert: PropTypes.func.isRequired,
-    };
-
-    onSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-        if(this.state.text === "") {
-            this.props.setAlert('Aucun terme n\' a été fournit à votre recherche', 'light');
+        if(text === "") {
+            setAlert('Aucun terme n\' a été fournit à votre recherche', 'light');
         } else {
-          this.props.searchMovies(this.state.text);
-            this.setState({text: ''});  
+            searchMovies(text);
+            setText('');  
         }  
     }
 
-    onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+    const onChange = (e) => setText(e.target.value);
 
-    render() {
-        const { searchQuerySend, clearMovies } =this.props;
-        return (
-            <div>
-                <form className="form" onSubmit={this.onSubmit} >
-                    <input 
-                        type="text" 
-                        name="text" 
-                        placeholder="Chercher votre film..." 
-                        value={this.state.text} 
-                        onChange={this.onChange} />
-                    <input type="submit" value="Rechercher" className="btn btn-dark btn-block" />
-                </form>
-                {searchQuerySend === true ? <button className="btn btn-light btn-block" onClick={clearMovies}>Retour</button> : null }
-            </div>
-        )
-    }
+    return (
+        <div>
+            <form className="form" onSubmit={onSubmit} >
+                <input 
+                    type="text" 
+                    name="text" 
+                    placeholder="Chercher votre film..." 
+                    value={text} 
+                    onChange={onChange} />
+                <input type="submit" value="Rechercher" className="btn btn-dark btn-block" />
+            </form>
+            {searchQuerySend === true ? <button className="btn btn-light btn-block" onClick={clearMovies}>Retour</button> : null }
+        </div>
+    )
 }
+
+Search.propTypes = {
+    searchMovies: PropTypes.func.isRequired,
+    clearMovies: PropTypes.func.isRequired,
+    searchQuerySend: PropTypes.bool.isRequired,
+    setAlert: PropTypes.func.isRequired,
+};
 
 export default Search
