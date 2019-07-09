@@ -35,7 +35,7 @@ const MoviesState = props => {
         setLoading();
 
         const fetchMovies = async () => {
-            const res = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${tmdbId}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`);
+            const res = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=59c76c5b0623517c046a93a7c472e779&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`);
             
             dispatch({
                 type: INITIAL_LIST_OF_MOVIES,
