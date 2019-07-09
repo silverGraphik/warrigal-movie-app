@@ -11,13 +11,13 @@ import {
     INITIAL_LIST_OF_MOVIES,
 } from '../types';
 
-let tmdbId;
+// let tmdbId;
 
-if(process.env.NODE_ENV !== 'production') {
-    tmdbId = process.env.REACT_APP_TMDB_API_KEY;
-} else {
-    tmdbId = process.env.TMDB_API_KEY;
-}
+// if(process.env.NODE_ENV !== 'production') {
+//     tmdbId = process.env.REACT_APP_TMDB_API_KEY;
+// } else {
+//     tmdbId = process.env.TMDB_API_KEY;
+// }
 
 const MoviesState = props => {
     const initialState = {
@@ -35,7 +35,7 @@ const MoviesState = props => {
         setLoading();
 
         const fetchMovies = async () => {
-            const res = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=59c76c5b0623517c046a93a7c472e779&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`);
+            const res = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`);
             
             dispatch({
                 type: INITIAL_LIST_OF_MOVIES,
@@ -50,7 +50,7 @@ const MoviesState = props => {
     const searchMovies = async text => {
         setLoading();
 
-        const res = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${tmdbId}&language=fr-FR&query=${text}&page=1&include_adult=false`);
+        const res = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=fr-FR&query=${text}&page=1&include_adult=false`);
         
         
         dispatch({
@@ -64,7 +64,7 @@ const MoviesState = props => {
     const getMovie = async movie_id => {
         setLoading();
 
-        const res = await axios.get(`https://api.themoviedb.org/3/movie/${movie_id}?language=fr-FR&api_key=${tmdbId}`);
+        const res = await axios.get(`https://api.themoviedb.org/3/movie/${movie_id}?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
 
         dispatch({
             type: GET_MOVIE,
@@ -76,7 +76,7 @@ const MoviesState = props => {
     const clearMovies = async () => {
         setLoading();
 
-        const res = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${tmdbId}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`);
+        const res = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`);
 
         dispatch({
             type: CLEAR_MOVIES,

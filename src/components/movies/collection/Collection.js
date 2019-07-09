@@ -4,13 +4,13 @@ import CollectionCastItem from '../items/CollectionCastItem';
 import CollectionCrewItem from '../items/CollectionCrewItem';
 import CollectionMovieItem from '../items/CollectionMovieItem';
 
-let tmdbId;
+// let tmdbId;
 
-if (process.env.NODE_ENV !== 'production') {
-    tmdbId = process.env.REACT_APP_TMDB_API_KEY;
-} else {
-    tmdbId = process.env.TMDB_API_KEY;
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     tmdbId = process.env.REACT_APP_TMDB_API_KEY;
+// } else {
+//     tmdbId = process.env.TMDB_API_KEY;
+// }
 
 const Collection = ({match}) => {
     const [collection, setCollection] = useState([]);
@@ -25,9 +25,9 @@ const Collection = ({match}) => {
         const collectionId = match.params.collectionId;
 
         const fetchData = async () => {
-            const res = await axios.get(`https://api.themoviedb.org/3/collection/${collectionId}?api_key=${tmdbId}&language=fr-FR`);
-            const cred = await axios.get(`https://api.themoviedb.org/3/movie/${res.data.parts[0].id}/credits?language=fr-FR&api_key=${tmdbId}`);
-            const genr = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${tmdbId}&language=fr-FR`);
+            const res = await axios.get(`https://api.themoviedb.org/3/collection/${collectionId}?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=fr-FR`);
+            const cred = await axios.get(`https://api.themoviedb.org/3/movie/${res.data.parts[0].id}/credits?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+            const genr = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=fr-FR`);
 
             if(isSubscribed) {
                 setCollection(res.data);

@@ -7,13 +7,13 @@ import RecommendationsItem from './items/RecommendationsItem';
 import MoviesContext from '../../context/Movies/moviesContext';
 
 
-let tmdbId;
+// let tmdbId;
 
-if (process.env.NODE_ENV !== 'production') {
-    tmdbId = process.env.REACT_APP_TMDB_API_KEY;
-} else {
-    tmdbId = process.env.TMDB_API_KEY;
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     tmdbId = process.env.REACT_APP_TMDB_API_KEY;
+// } else {
+//     tmdbId = process.env.TMDB_API_KEY;
+// }
 
 const Movie = ({ match }) => {
     const moviesContext = useContext(MoviesContext);
@@ -32,13 +32,13 @@ const Movie = ({ match }) => {
         getMovie(match.params.movieId);
 
         const fetchCredit = async () => {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=fr-FR&api_key=${tmdbId}`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             setMovieCreditCast(res.data.cast);
             setMovieCreditCrew(res.data.crew);
         };
 
         const fetchRecommendationList = async () => {
-            const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${tmdbId}`);
+            const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             setRecommendationsList(recom.data.results);
         };
 
