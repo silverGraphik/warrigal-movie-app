@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useContext } from 'react';
+import MoviesContext from '../../context/Movies/moviesContext';
+import AlertContext from '../../context/Alert/alertContext';
 
 
-const Search = ({ searchQuerySend, clearMovies, setAlert, searchMovies}) => {
+const Search = () => {
+    const moviesContext = useContext(MoviesContext);
+    const alertContext = useContext(AlertContext);
+
+
     const [text, setText] = useState('');
 
     const onSubmit = (e) => {
         e.preventDefault();
         if(text === "") {
-            setAlert('Aucun terme n\' a été fournit à votre recherche', 'light');
+            alertContext.setAlert('Aucun terme n\' a été fournit à votre recherche', 'light');
         } else {
-            searchMovies(text);
+            moviesContext.searchMovies(text);
             setText('');  
         }  
     }
@@ -28,16 +33,9 @@ const Search = ({ searchQuerySend, clearMovies, setAlert, searchMovies}) => {
                     onChange={onChange} />
                 <input type="submit" value="Rechercher" className="btn btn-dark btn-block" />
             </form>
-            {searchQuerySend === true ? <button className="btn btn-light btn-block" onClick={clearMovies}>Retour</button> : null }
+            {moviesContext.searchQuerySend === true ? <button className="btn btn-light btn-block" onClick={moviesContext.clearMovies}>Retour</button> : null }
         </div>
     )
 }
-
-Search.propTypes = {
-    searchMovies: PropTypes.func.isRequired,
-    clearMovies: PropTypes.func.isRequired,
-    searchQuerySend: PropTypes.bool.isRequired,
-    setAlert: PropTypes.func.isRequired,
-};
 
 export default Search

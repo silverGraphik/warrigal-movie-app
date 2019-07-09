@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import MoviesContext from '../../context/Movies/moviesContext';
 
 
 const Navbar = ({ img_url, title }) => {
+    const moviesContext = useContext(MoviesContext);
     return (
         <nav className="navbar bg-primary">
             <div className="navbrand">
@@ -12,7 +14,7 @@ const Navbar = ({ img_url, title }) => {
             </div>
             <ul>
                 <li>
-                    <Link to='/'>Accueil</Link>
+                    <Link to='/'  onClick={moviesContext.clearMovies}>Accueil</Link>
                 </li>
                 <li>
                     <Link to='/about'>A Propos</Link>

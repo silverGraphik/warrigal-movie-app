@@ -1,11 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MovieCreditItem from './items/MovieCreditItem';
 import MovieCastItem from './items/MovieCastItem';
 import RecommendationsItem from './items/RecommendationsItem';
+import MoviesContext from '../../context/Movies/moviesContext';
 
-const Movie = ({ getMovie, match, movie }) => {
+
+let tmdbId;
+
+if (process.env.NODE_ENV !== 'production') {
+    tmdbId = process.env.REACT_APP_TMDB_API_KEY;
+} else {
+    tmdbId = process.env.TMDB_API_KEY;
+}
+
+const Movie = ({ match }) => {
+    const moviesContext = useContext(MoviesContext);
+
+    const { getMovie, movie, clearMovies } = moviesContext;
+
     const [movieCreditCrew, setMovieCreditCrew] = useState({});
     const [movieCreditCast, setMovieCreditCast] = useState({});
     const [recommendationsList, setRecommendationsList] = useState([]);
@@ -18,13 +32,13 @@ const Movie = ({ getMovie, match, movie }) => {
         getMovie(match.params.movieId);
 
         const fetchCredit = async () => {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=fr-FR&api_key=${tmdbId}`);
             setMovieCreditCast(res.data.cast);
             setMovieCreditCrew(res.data.crew);
         };
 
         const fetchRecommendationList = async () => {
-            const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+            const recom = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=fr-FR&api_key=${tmdbId}`);
             setRecommendationsList(recom.data.results);
         };
 
@@ -99,7 +113,7 @@ const Movie = ({ getMovie, match, movie }) => {
         let movieDuration = `${movieHour}h ${movieMinute}min.`;
 
         //rendre le revenue et budget d'un film plus facile à lire pour l'utilisateur
-        const addStyleToBudgetRevenur = (budRev) => {
+        const addStyleToBudgetRevenue = (budRev) => {
             let newArr = ('' + budRev).split('').map(function (digit) { 
                 return digit;
             });
@@ -196,7 +210,7 @@ const Movie = ({ getMovie, match, movie }) => {
                         <div className="recomm">
                             <h2>Recommendations</h2>
                             <ul className="recommendation-container">
-                                {recommendationsArr}
+                                {recommendationsArr && recommendationsArr}
                             </ul>
                         </div>
                     </div>
@@ -225,12 +239,12 @@ const Movie = ({ getMovie, match, movie }) => {
                                 { production_countries ? production_countries.map(production_country => (<li key={production_country.iso_3166_1}>- {production_country.name}</li>)) : null }
                             </ul>
                         </div>
-                        <div className="aside-item budget"><h3>Budget</h3><p>{addStyleToBudgetRevenur(budget)}$</p></div>
-                        <div className="aside-item budget"><h3>Recette</h3><p>{revenue === 0 ? `-` : `${addStyleToBudgetRevenur(revenue)}$`}</p></div>
+                        <div className="aside-item budget"><h3>Budget</h3><p>{addStyleToBudgetRevenue(budget)}$</p></div>
+                        <div className="aside-item budget"><h3>Recette</h3><p>{revenue === 0 ? `-` : `${addStyleToBudgetRevenue(revenue)}$`}</p></div>
                         <ul className=" aside-item genres">
                             <h3>Genres</h3>
                             <div className="li-item">
-                                { genres ? genres.map(genre => (<Link to={`genre/${genre.id}`} key={genre.id}>{genre.name}</Link>)) : null }
+                                { genres ? genres.map(genre => (<Link to={`genre/${genre.id}`} key={genre.id} onClick={clearMovies}>{genre.name}</Link>)) : null }
                             </div>
                         </ul>
                         <div className="aside-item popularity">

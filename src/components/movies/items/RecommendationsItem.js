@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 
@@ -12,10 +11,6 @@ const RecommendationsItem = ({recommendationList: {poster_path, title, id}}) => 
             </Link>
         </li>
     )
-}
-
-RecommendationsItem.propTypes = {
-    recommendationList: PropTypes.object.isRequired,
 }
 
 export default RecommendationsItem
