@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/warrigal-movie-app/precache-manifest.08d60eb8306a93d46a9a20bad8c0b5e0.js"
+  "/warrigal-movie-app/precache-manifest.d622e8e886e7bd63ca9b06537efeee1a.js"
 );
 
 self.addEventListener('message', (event) => {
